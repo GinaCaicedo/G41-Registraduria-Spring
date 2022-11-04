@@ -13,11 +13,11 @@ public class PermisoRol {
     private String _id;
     //hacen referencia a otra base de datos
     @DBRef
-    private String rol;
+    private Rol rol;
     @DBRef
-    private Rol permiso;
+    private Permiso permiso;
 
-    public PermisoRol(String rol, Rol permiso) {
+    public PermisoRol(Rol rol, Permiso permiso) {
         this.rol = rol;
         this.permiso = permiso;
     }

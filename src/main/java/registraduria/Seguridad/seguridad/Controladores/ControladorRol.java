@@ -35,7 +35,7 @@ public class ControladorRol {
     public Rol show(@PathVariable String id){
         return miRepositorioRol
                 .findById(id)
-                .orElse(new Rol("",""));
+                .orElse(null);
 
     }
     @PutMapping("{id}")

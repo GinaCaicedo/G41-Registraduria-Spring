@@ -112,7 +112,7 @@ public class ControladorUsuario {
 
     //Asociar usuario rol(existen en la base de datos)
     @PutMapping("{infoUsuario}/rol/{InfoRol}")
-    public Usuario asignarTdUsuario(@PathVariable String InfoUsuario, @PathVariable String InfoRol) {
+    public Usuario asignarUsuario(@PathVariable String InfoUsuario, @PathVariable String InfoRol) {
 
         Usuario usuario = miRepositorioUsuario
                 .findById(InfoUsuario)

@@ -14,9 +14,10 @@ public class Rol extends Permiso {
     private String nombre;
     private String descripcion;
 
-    public Rol(String nombre, String descripcion) {
+    public Rol(String url, String metodo, String nombre, String descripcion) {
+        super(url, metodo);
         this.nombre = nombre;
         this.descripcion = descripcion;
-
     }
 }
+
