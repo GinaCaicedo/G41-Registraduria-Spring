@@ -7,24 +7,23 @@ import org.springframework.web.bind.annotation.*;
 import registraduria.Seguridad.seguridad.Modelos.Permiso;
 import registraduria.Seguridad.seguridad.Repositorios.RepositorioPermiso;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @Slf4j
 @CrossOrigin
 @RestController
-@RequestMapping("/rol")
+@RequestMapping("/permiso")
+
 public class ControladorPermiso {
     @Autowired
     private RepositorioPermiso miRepositorioPermiso;
     @GetMapping("")
-    public List<Permiso> index(){
+    public List<Permiso> indexpermiso(){
         return this.miRepositorioPermiso.findAll();
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
+    @PostMapping("infoPermiso")
     public Permiso create(@RequestBody Permiso infoPermiso){
         return this.miRepositorioPermiso.save(infoPermiso);
     }
@@ -36,7 +35,7 @@ public class ControladorPermiso {
                 .orElse(null);
 
     }
-    @PutMapping("{id}")
+    @PutMapping("{idPermiso}")
     public Permiso update(@PathVariable String idPermiso, @RequestBody Permiso infoPermiso) {
         log.info("Modificando el permiso: {}", idPermiso);
 
@@ -55,9 +54,10 @@ public class ControladorPermiso {
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @DeleteMapping("{id}")
-    public void delete (@PathVariable String id){
-        miRepositorioPermiso.deleteById(id);
+    @DeleteMapping("{idPermiso}")
+    public void delete (@PathVariable String idPermiso){
+
+        miRepositorioPermiso.deleteById(idPermiso);
     }
 
 
