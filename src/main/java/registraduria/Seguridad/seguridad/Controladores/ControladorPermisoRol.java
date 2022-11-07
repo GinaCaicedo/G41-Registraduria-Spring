@@ -31,11 +31,12 @@ public class ControladorPermisoRol {
                 .findById(idRol)
                 .orElseThrow(RuntimeException::new);
 
-        Permiso permisos = miRepositorioRol
+
+        Permiso permiso = miRepositorioPermiso
                 .findById(idPermiso)
                 .orElseThrow(RuntimeException::new);
 
-        PermisoRol permisoRol = new PermisoRol(rol, permisos);
+        PermisoRol permisoRol = new PermisoRol(rol, permiso);
 
         return miRepositorioPermisoRol.save(permisoRol);
 
@@ -47,17 +48,51 @@ public class ControladorPermisoRol {
 
     }
 
+//    @GetMapping("validar-permiso/rol/{idRol}")
+//    public PermisoRol validarPermisosDelRol(@PathVariable String idRol, @RequestBody Permiso infoPermiso, HttpServletResponse response) throws IOException {
+//
+//        //Buscar en base de datos el rol y permiso
+//        Rol rolActual = miRepositorioRol.findById(idRol).orElse(null);
+//        Permiso permisoActual = miRepositorioPermiso.findByUrlAndMethod(infoPermiso.getUrl(), infoPermiso.getMetodo());
+//
+//        //Validar si existe el rol y el permiso en base de datos
+//        if (rolActual != null && permisoActual != null) {
+//
+//            String idRolActual = rolActual.get_id();
+//            String idPermisoActual = permisoActual.get_id();
+//            log.info("idRolActual: {}, idPermisoActual: {}", idRolActual, idPermisoActual);
+//
+//            //Buscar en la tabla PermisosRol si el rol tiene asociado el permiso.
+//            PermisoRol permisosRolActual = miRepositorioPermisoRol.findByRolAndPermissions(idRolActual, idPermisoActual);
+//            log.info("El permisosRol que encontró en BD fue: {}", permisosRolActual);
+//
+//            if (permisosRolActual != null) {
+//                return permisosRolActual;
+//            } else {
+//                log.error("NO se encuentra el PermisosRol en base de datos");
+//                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+//                return null;
+//            }
+//        } else {
+//            log.error("NO se encuentra el rol o el permiso en base de datos");
+//            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+//            return null;
+//        }
+
+
     @GetMapping("{id}")
     public PermisoRol show(@PathVariable String id) {
         return miRepositorioPermisoRol
                 .findById(id)
                 .orElse(null);
+
     }
 
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @DeleteMapping("{id}")
     public void delete(@PathVariable String id) {
+
         miRepositorioPermisoRol.deleteById(id);
     }
 

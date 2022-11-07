@@ -20,15 +20,15 @@ public class ControladorRol {
     @Autowired
     private RepositorioRol miRepositorioRol;
     @GetMapping("")
-    public List<Rol> index(){
-        return this.miRepositorioRol.findAll();
+    public List<Rol> indexrol(){
+        return miRepositorioRol.findAll();
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public Rol create(@RequestBody Rol infoRol){
 
-        return this.miRepositorioRol.save(infoRol);
+        return miRepositorioRol.save(infoRol);
     }
 
     @GetMapping("{id}")
@@ -38,7 +38,7 @@ public class ControladorRol {
                 .orElse(null);
 
     }
-    @PutMapping("{id}")
+    @PutMapping("{idRol}")
     public Rol update(@PathVariable String idRol, @RequestBody Rol infoRol) {
         Rol rolActual = miRepositorioRol.findById(idRol).orElse(null);
         if (rolActual != null) {
@@ -52,29 +52,29 @@ public class ControladorRol {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("{id}")
     public void delete(@PathVariable String id){
-        Rol rolActual=this.miRepositorioRol
+        Rol rolActual=miRepositorioRol
                 .findById(id)
                 .orElse(null);
         if (rolActual!=null){
-            this.miRepositorioRol.delete(rolActual);
+            miRepositorioRol.delete(rolActual);
         }
     }
-    public String convertirSHA256(String password) {
-        MessageDigest md = null;
-        try {
-            md = MessageDigest.getInstance("SHA-256");
-        }
-        catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return null;
-        }
-        byte[] hash = md.digest(password.getBytes());
-        StringBuffer sb = new StringBuffer();
-        for(byte b : hash) {
-            sb.append(String.format("%02x", b));
-        }
-        return sb.toString();
-    }
+//    public String convertirSHA256(String password) {
+//        MessageDigest md = null;
+//        try {
+//            md = MessageDigest.getInstance("SHA-256");
+//        }
+//        catch (NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//        byte[] hash = md.digest(password.getBytes());
+//        StringBuffer sb = new StringBuffer();
+//        for(byte b : hash) {
+//            sb.append(String.format("%02x", b));
+//        }
+//        return sb.toString();
+//    }
 
 
 }
