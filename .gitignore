@@ -1,4 +1,12 @@
 HELP.md
+
+.DS_Store
+/target/
+/.idea/
+.idea/compiler.xml
+.idea/compiler.xml
+
+
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
