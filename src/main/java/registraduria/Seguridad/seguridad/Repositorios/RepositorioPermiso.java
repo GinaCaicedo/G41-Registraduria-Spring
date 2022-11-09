@@ -10,4 +10,5 @@ public interface RepositorioPermiso extends MongoRepository<Permiso,String> {
     @Query("{'url':?0,'metodo:?1'}")
     public Permiso findbyMethodandUrl(String url, String Metodo);
 
+    public Permiso findByUrlAndMethod(String url, String metodo);
 }
