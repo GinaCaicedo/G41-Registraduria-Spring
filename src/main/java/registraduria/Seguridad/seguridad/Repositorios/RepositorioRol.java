@@ -6,6 +6,6 @@ import registraduria.Seguridad.seguridad.Modelos.PermisoRol;
 import registraduria.Seguridad.seguridad.Modelos.Rol;
 
 public interface RepositorioRol extends MongoRepository<Rol,String> {
-    @Query("{'rol.$_id':ObjectId(?0),'permiso.$_id':ObjectId(?1)}")
-    public PermisoRol findRolandPermission(String idRol, String idPermiso);
+    @Query("{'rol.$id':ObjectId(?0),'permiso.$id':ObjectId(?1)}")
+    PermisoRol findByRolAndPermissions(String idRol, String idPermiso);
 }

@@ -7,6 +7,6 @@ import registraduria.Seguridad.seguridad.Modelos.Permiso;
 
 public interface RepositorioPermiso extends MongoRepository<Permiso,String> {
     //metodo y url busco permiso
-    @Query("{'url':?0,'metodo:?1'}")
-    public Permiso findByUrlAndMethod(String url, String Metodo);
+    @Query("{'url':?0,'metodo':?1}")
+    Permiso findByUrlAndMethod(String url, String metodo);
 }

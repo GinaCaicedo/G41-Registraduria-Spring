@@ -6,5 +6,5 @@ import registraduria.Seguridad.seguridad.Modelos.Usuario;
 
 public interface RepositorioUsuario extends MongoRepository<Usuario,String> {
     @Query("{'correo':?0}")
-    public Usuario findByEmail(String correo);
+    Usuario findByEmail(String correo);
 }
