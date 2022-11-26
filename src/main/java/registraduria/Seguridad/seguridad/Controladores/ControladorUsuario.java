@@ -3,18 +3,21 @@ package registraduria.Seguridad.seguridad.Controladores;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.server.DelegatingServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
 import registraduria.Seguridad.seguridad.Modelos.Rol;
 import registraduria.Seguridad.seguridad.Modelos.Usuario;
 import registraduria.Seguridad.seguridad.Repositorios.RepositorioRol;
 import registraduria.Seguridad.seguridad.Repositorios.RepositorioUsuario;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 
-@Slf4j
+
 @CrossOrigin
 @RestController
 @RequestMapping("/usuarios")
@@ -27,16 +30,17 @@ public class ControladorUsuario {
     private RepositorioRol miRepositorioRol;
 
     @GetMapping("")
-    public List<Usuario> index() {
-        return this.miRepositorioUsuario.findAll();
+    public List<Usuario> indexusuario() {
+        return miRepositorioUsuario.findAll();
     }
+
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Usuario create(@RequestBody Usuario infoUsuario) {
+    public Usuario create (@RequestBody Usuario infoUsuario) {
 
         infoUsuario.setContrasena(convertirSHA256(infoUsuario.getContrasena()));
-        return this.miRepositorioUsuario.save(infoUsuario);
+        return miRepositorioUsuario.save(infoUsuario);
     }
 
     @GetMapping("{id}")
@@ -50,14 +54,14 @@ public class ControladorUsuario {
     @PutMapping("{id}")
     public Usuario update(@PathVariable String id, @RequestBody Usuario
             infoUsuario) {
-        Usuario usuarioActual = this.miRepositorioUsuario
+        Usuario usuarioActual = miRepositorioUsuario
                 .findById(id)
                 .orElse(null);
         if (usuarioActual != null) {
             usuarioActual.setSeudonimo(infoUsuario.getSeudonimo());
             usuarioActual.setCorreo(infoUsuario.getCorreo());
             usuarioActual.setContrasena(convertirSHA256(infoUsuario.getContrasena()));
-            return this.miRepositorioUsuario.save(usuarioActual);
+            return miRepositorioUsuario.save(usuarioActual);
         } else {
             return null;
         }
@@ -83,39 +87,63 @@ public class ControladorUsuario {
             return null;
         }
         byte[] hash = md.digest(password.getBytes());
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (byte b : hash) {
             sb.append(String.format("%02x", b));
         }
         return sb.toString();
     }
 
+//
+//    /* API GATEWAY- queries- algo pasa que no funcionA*/
+//    @PostMapping("validar-usuario")
+//    public Usuario validarUsuario(@RequestBody Usuario infoUsuario,HttpServletResponse response) throws IOException {
+//        log.info("Validando el usuario, request body: {}", infoUsuario);
+//
+//        //busca el usuario  por email
+//        Usuario usuarioActual =miRepositorioUsuario.findByEmail(infoUsuario.getCorreo());
+//
+//        if (usuarioActual != null) {
+//            log.info("Validando el usuario 2, request body: {}", infoUsuario);
+//            String contrasenaUsuario = convertirSHA256(infoUsuario.getContrasena());
+//            String contrasenaBaseDatos = infoUsuario.getContrasena();
+//
+//            if (contrasenaUsuario.equals(contrasenaBaseDatos)) {
+//                log.info("Validando el usuario 3, request body: {}", infoUsuario);
+//                usuarioActual.setContrasena(" ");
+//                return usuarioActual;
+//            } else {
+//                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+//                return null;
+//            }
+//        } else {
+//            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+//            return null;
+//        }
+//    }
 
-    /* API GATEWAY- queries*/
-    @PostMapping("validarUsuario")
-    public Usuario validarUsuario(@RequestBody Usuario infoUsuario) {
-        log.info("Validando el usuario, request body: {}", infoUsuario);
 
-        //busca el usuario  por email
+    @PostMapping("validar-usuario")
+    public Usuario validarUsuario(@RequestBody Usuario infoUsuario,HttpServletResponse response) throws IOException {
         Usuario usuarioActual = miRepositorioUsuario.findByEmail(infoUsuario.getCorreo());
-        //Comparar los hash usuario e ingresada
-        String contrasenaUsuario = convertirSHA256(infoUsuario.getContrasena());
-        String contrasenaBaseDatos = infoUsuario.getContrasena();
-        if (contrasenaUsuario.equals(contrasenaBaseDatos)) {
+
+        if (usuarioActual != null && usuarioActual.getContrasena().equals(convertirSHA256(infoUsuario.getContrasena()))){
+            usuarioActual.setContrasena("");
             return usuarioActual;
-        } else {
+        }else{
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return null;
         }
-        // return usuarioActual;
     }
 
 
-    //Asociar usuario rol(existen en la base de datos)
+        //Asociar usuario rol(existen en la base de datos)
+
     @PutMapping("{infoUsuario}/rol/{InfoRol}")
-    public Usuario asignarUsuario(@PathVariable String InfoUsuario, @PathVariable String InfoRol) {
+    public Usuario asignarUsuario(@PathVariable String infoUsuario, @PathVariable String InfoRol) {
 
         Usuario usuario = miRepositorioUsuario
-                .findById(InfoUsuario)
+                .findById(infoUsuario)
                 .orElse(null);
 
         Rol rol = miRepositorioRol
@@ -131,4 +159,5 @@ public class ControladorUsuario {
             return null;
         }
     }
+
 }
